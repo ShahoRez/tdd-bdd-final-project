@@ -129,6 +129,7 @@ def list_products():
 # R E A D   A   P R O D U C T
 ######################################################################
 
+
 @app.route("/products/<int:product_id>", methods=["GET"])
 def get_products(product_id):
     """
@@ -149,26 +150,34 @@ def get_products(product_id):
 # U P D A T E   A   P R O D U C T
 ######################################################################
 
+######################################################################
+# UPDATE AN EXISTING PRODUCT
+######################################################################
+
+
 @app.route("/products/<int:product_id>", methods=["PUT"])
-def updated_products(product_id):
+def update_products(product_id):
     """
-    Update an Product
-    This endpoint will update a Product based on the body that is posted
+    Update a Product
+
+    This endpoint will update a Product based the body that is posted
     """
     app.logger.info("Request to Update a product with id [%s]", product_id)
     check_content_type("application/json")
 
     product = Product.find(product_id)
     if not product:
-        abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id} was not found")
-   product.deserialize(response.get_json())
-   product.id = product_id
-   product.update()
-   return product.serialize, status.HTTP_200_OK
+        abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
+
+    product.deserialize(request.get_json())
+    product.id = product_id
+    product.update()
+    return product.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # D E L E T E   A   P R O D U C T
 ######################################################################
+
 
 @app.route("/products/<int:product_id>", methods=["DELETE"])
 def delete_products(product_id):
@@ -179,8 +188,8 @@ def delete_products(product_id):
     """
     app.logger.info("Request to Delete a product with id [%s]", product_id)
 
-    product = Product.find(product_id) 
+    product = Product.find(product_id)
     if product:
         product.delete()
 
-    return "" + status.HTTP_204_NO_CONTENT
+    return "", status.HTTP_204_NO_CONTENT
