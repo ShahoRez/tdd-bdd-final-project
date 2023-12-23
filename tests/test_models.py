@@ -133,6 +133,25 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(products[0].id, original_id)
         self.assertEqual(products[0].description, "testing")
 
+    def test_update_fake_product(self):
+        """It should handle updating a fake Product"""
+        # Create a fake product that doesn't exist in the system
+        fake_product = ProductFactory()
+        fake_product.id = None 
+        fake_product.create()
+
+        fake_product.description = "Updated Description"
+        original_id = fake_product.id
+        fake_product.id = 9999
+        fake_product.update()
+
+        # Fetch products and assert no changes occurred
+        products = Product.all()
+        self.assertEqual(len(products), 1)  
+
+        self.assertEqual(fake_product.id , 9999)
+        self.assertNotEqual(fake_product.id, original_id)  
+
     def test_delete_a_product(self):
         """It should Delete a Product"""
         product = ProductFactory()
