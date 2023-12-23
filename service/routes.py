@@ -164,7 +164,6 @@ def update_products(product_id):
     """
     app.logger.info("Request to Update a product with id [%s]", product_id)
     check_content_type("application/json")
-
     product = Product.find(product_id)
     if not product:
         abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
